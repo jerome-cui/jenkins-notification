@@ -156,11 +156,12 @@ public enum Phase {
         	return true;
         case "failed":
         	if (result == null) {return false;}
-        	return this.equals(FINALIZED) && result.equals(Result.FAILURE);
+        	return this.equals(FINALIZED) && (result.equals(Result.FAILURE) || result.equals(Result.ABORTED));
         case "failedAndFirstSuccess":
         	if (result == null || !this.equals(FINALIZED)) {return false;}
-        	if (result.equals(Result.FAILURE)) {return true;}
-        	if (previousRunResult != null && result.equals(Result.SUCCESS) && previousRunResult.equals(Result.FAILURE)) {return true;}
+        	if (result.equals(Result.FAILURE) || result.equals(Result.ABORTED)) {return true;}
+        	if (previousRunResult != null && result.equals(Result.SUCCESS)
+                && (previousRunResult.equals(Result.FAILURE) || previousRunResult.equals(Result.ABORTED))) {return true;}
         	return false;
         default:
         	return event.equals(this.toString().toLowerCase());	
